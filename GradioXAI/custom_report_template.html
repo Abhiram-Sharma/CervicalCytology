@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cervical Cytology Report - {{patient_name}}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+    <style>
+        /* --- General Body and Font Styles --- */
+        body {
+            font-family: 'Lato', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            font-size: 14px;
+        }
+        /* --- Main Report Container --- */
+        .container {
+            max-width: 850px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-top: 10px solid #0D47A1;
+        }
+        /* --- Header Section --- */
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .report-header h1 {
+            font-size: 28px;
+            color: #0D47A1;
+            margin: 0;
+        }
+        .report-header .logo {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1565C0;
+        }
+        /* --- Section Styling --- */
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1565C0;
+            border-bottom: 1px solid #B0BEC5;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+        /* --- Patient and Test Details Grid --- */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px 20px;
+        }
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .info-item .label {
+            font-weight: 700;
+            color: #546E7A;
+            margin-bottom: 3px;
+        }
+        .info-item .value {
+            font-size: 15px;
+            color: #37474F;
+        }
+        /* --- Image Comparison Section --- */
+        .image-comparison {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .image-container {
+            text-align: center;
+            flex: 1;
+            min-width: 300px;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #CFD8DC;
+            border-radius: 4px;
+            background-color: #ECEFF1;
+        }
+        .image-container p {
+            margin-top: 8px;
+            font-weight: 700;
+            color: #455A64;
+        }
+        /* --- Results Analysis Section --- */
+        .result-box {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        }
+        /* Dynamic classes for prediction status */
+        .status-normal { background-color: #E8F5E9; border: 1px solid #4CAF50; color: #1B5E20; }
+        .status-abnormal { background-color: #FFF3E0; border: 1px solid #FF9800; color: #E65100; }
+        .status-malignant { background-color: #FFEBEE; border: 1px solid #F44336; color: #B71C1C; }
+        .status-inconclusive { background-color: #E0E0E0; border: 1px solid #616161; color: #212121; }
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        /* Cell Distribution Table */
+        .cell-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .cell-table th, .cell-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #CFD8DC;
+        }
+        .cell-table th {
+            background-color: #ECEFF1;
+            font-weight: 700;
+            color: #37474F;
+        }
+        .cell-table tr:nth-child(even) {
+            background-color: #FAFAFA;
+        }
+        /* Qualitative Analysis & Remarks */
+        .text-block {
+            background-color: #f8f9fa;
+            border-left: 4px solid #B0BEC5;
+            padding: 15px;
+            font-style: italic;
+            color: #455A64;
+        }
+        /* Alert Messages */
+        .alert-message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            background-color: #FFF9C4;
+            border: 1px solid #FBC02D;
+            color: #795548;
+        }
+        .alert-message .alert-title {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        /* --- Footer --- */
+        .report-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            font-size: 12px;
+            color: #757575;
+            text-align: center;
+        }
+        .report-footer .disclaimer {
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .signature-line {
+            border-bottom: 1px solid #333;
+            width: 250px;
+            margin: 50px 0 10px auto;
+        }
+        .signature-block {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Report Header -->
+        <header class="report-header">
+            <div class="logo">{{lab_name}}</div>
+            <h1>Cervical Cytology Report</h1>
+        </header>
+
+        <!-- Patient and Test Information Section -->
+        <section class="section">
+            <h2 class="section-title">Patient Details</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">Patient Name</span>
+                    <span class="value">{{patient_name}}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Gender</span>
+                    <span class="value">{{patient_gender}}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Date of Birth</span>
+                    <span class="value">{{patient_dob}}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Patient ID</span>
+                    <span class="value">{{patient_id}}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Slide ID</span>
+                    <span class="value">{{slide_id}}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Date & Time of Test</span>
+                    <span class="value">{{test_datetime}}</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Image Section -->
+        <section class="section">
+            <h2 class="section-title">Slide Image Analysis</h2>
+            <div class="image-comparison">
+                <div class="image-container">
+                    <p>Test Sample</p>
+                    <!-- Embedded base64 image -->
+                    <img src="{{ original_image_src }}" alt="Original LBC Slide Image" />
+                </div>
+                <div class="image-container">
+                    <p>Test Result</p>
+                    <!-- Embedded base64 image -->
+                    <img src="{{ overlaid_image_src }}" alt="AI Analysis Overlaid Image" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Result Analysis Section -->
+        <section class="section">
+            <h2 class="section-title">Result Analysis</h2>
+
+            <!-- Alerts and Confidence -->
+            
+
+            <!-- Alert Message -->
+            {{alert_message_html_block}}
+            
+
+            <div class="analysis grid">
+                <!-- Cell Distribution -->
+                <div class="cell-distribution">
+                    <h3 class="section-title" style="font-size: 16px; border: none; padding-bottom: 0;">Cell-wise Distribution</h3>
+                    <table class="cell-table">
+                        <thead>
+                            <tr>
+                                <th>Cell Type / Abnormality</th>
+                                <th>Detected Count</th>
+                                <th>Distribution (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{cell_distribution_table_rows}}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Qualitative Analysis -->
+                <div class="qualitative-analysis">
+                    <h3 class="section-title" style="font-size: 16px; border: none; padding-bottom: 0;">Qualitative Analysis</h3>
+                    <div class="text-block">
+                        <p>{{qualitative_analysis_text}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style='margin-top:5px;' class="result-box {{prediction_class}}">
+                <strong>Final Diagnosis:</strong> {{overall_prediction}}
+            </div>
+
+        </section>
+
+        <!-- Remarks Section -->
+        <section class="section">
+            <h2 class="section-title">Pathologist Remarks</h2>
+            <div class="text-block" style="font-style: normal; min-height: 80px;">
+                <p>{{pathologist_remarks}}</p>
+            </div>
+            <div class="signature-block">
+                <div class="signature-line"></div>
+                <strong>Dr. {{reporting_pathologist_name}}</strong><br />
+                Consultant Pathologist
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <p>Report Generated on: {{report_generation_datetime}}</p>
+            <p class="disclaimer">
+                This report was generated with the assistance of an AI-based analytical tool. It is intended for use by qualified medical professionals and should be interpreted in conjunction with clinical findings and other diagnostic results. The final diagnosis remains the responsibility of the reporting pathologist.
+            </p>
+            <p><strong>{{lab_name}}</strong> | {{lab_address}} | Phone: {{lab_phone}}</p>
+        </footer>
+    </div>
+</body>
+</html>
