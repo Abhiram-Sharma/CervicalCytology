@@ -1,0 +1,54 @@
+/* styles.css */
+
+/* Remove scrolling and normalize layout */
+body, html, #root, .gradio-container {
+  max-height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Adjust prediction box */
+#prediction-box textarea {
+  background-color: #fff5e6;
+  border: 1px solid #ffa500;
+  font-weight: bold;
+  color: #b30000;
+  text-align: center;
+}
+
+/* Image scaling */
+.gr-image img {
+  max-height: 300px;
+  object-fit: contain;
+}
+
+/* Uniform input styling */
+textarea, input[type="text"] {
+  font-size: 14px;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* Button styling */
+button {
+  background-color: #005eff;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+button:hover {
+  background-color: #003fc0;
+}
+/* Vertical divider line */
+.divider {
+  width: 2px;
+  background-color: #d3d3d3;
+  margin: 0 20px;
+  height: auto;
+}
